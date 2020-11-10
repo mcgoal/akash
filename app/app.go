@@ -58,6 +58,7 @@ import (
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
+	"github.com/ovrclk/akash/x/audit"
 	"github.com/ovrclk/akash/x/deployment"
 	"github.com/ovrclk/akash/x/market"
 	"github.com/ovrclk/akash/x/provider"
@@ -129,6 +130,7 @@ type AkashApp struct {
 		deployment deployment.Keeper
 		market     market.Keeper
 		provider   provider.Keeper
+		audit      audit.Keeper
 	}
 
 	mm *module.Manager

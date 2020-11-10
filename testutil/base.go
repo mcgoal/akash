@@ -50,7 +50,6 @@ func Attributes(t testing.TB) []types.Attribute {
 		vals = append(vals, Attribute(t))
 	}
 	return vals
-
 }
 
 // Resources produces an attribute list for populating a Group's

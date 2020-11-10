@@ -1,0 +1,32 @@
+syntax = "proto3";
+package akash.audit.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+
+option go_package = "github.com/ovrclk/akash/x/audit/types";
+
+// Query defines the gRPC querier service
+service Query {
+  rpc Auditors(QueryAuditorsRequest) returns (QueryAuditorsResponse) {
+    option (google.api.http).get = "/akash/audit/v1beta1/auditors/list";
+  }
+}
+
+// QueryAuditorsRequest is request type for the Query/Orders RPC method
+message QueryAuditorsRequest {
+  AuditFilters filters = 1 [(gogoproto.nullable) = false];
+
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryAuditorsResponse is response type for the Query/Orders RPC method
+message QueryAuditorsResponse {
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// OrderFilters defines flags for order list filter
+message AuditFilters {
+  option (gogoproto.equal) = false;
+}

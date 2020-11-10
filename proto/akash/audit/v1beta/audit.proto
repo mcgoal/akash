@@ -1,0 +1,131 @@
+syntax = "proto3";
+package akash.audit.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "akash/base/v1beta1/attribute.proto";
+
+option go_package = "github.com/ovrclk/akash/x/audit/types";
+
+message Provider {
+  string owner = 1 [
+    (gogoproto.jsontag) = "owner",
+    (gogoproto.moretags) = "yaml:\"owner\""
+  ];
+
+  string validator = 2 [
+    (gogoproto.jsontag) = "validator",
+    (gogoproto.moretags) = "yaml:\"validator\""
+  ];
+
+  repeated akash.base.v1beta1.Attribute attributes = 4 [
+    (gogoproto.castrepeated) = "github.com/ovrclk/akash/x/provider/types.Attributes",
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "attributes",
+    (gogoproto.moretags) = "yaml:\"attributes\""];
+}
+
+// Attributes
+message AuditedAttributes {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_stringer) = true;
+
+  enum State {
+    option (gogoproto.goproto_enum_prefix) = false;
+
+    // Prefix should start with 0 in enum. So declaring dummy state
+    invalid = 0 [(gogoproto.enumvalue_customname) = "AuditedAttributesStateInvalid"];
+    // AttributesSigned denotes state for attributes active
+    signed = 1 [(gogoproto.enumvalue_customname) = "AuditedAttributesSigned"];
+  }
+
+  State state = 1 [
+    (gogoproto.jsontag) = "state",
+    (gogoproto.moretags) = "yaml:\"state\""
+  ];
+
+  string owner = 2 [
+    (gogoproto.jsontag) = "owner",
+    (gogoproto.moretags) = "yaml:\"owner\""
+  ];
+
+  string validator = 3 [
+    (gogoproto.jsontag) = "validator",
+    (gogoproto.moretags) = "yaml:\"validator\""
+  ];
+
+  repeated akash.base.v1beta1.Attribute attributes = 4 [
+    (gogoproto.castrepeated) = "github.com/ovrclk/akash/x/provider/types.Attributes",
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "attributes",
+    (gogoproto.moretags) = "yaml:\"attributes\""];
+}
+
+// AttributesResponse represents details of deployment along with group details
+message AttributesResponse {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_stringer) = true;
+
+  repeated AuditedAttributes attributes = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "attributes",
+    (gogoproto.moretags) = "yaml:\"attributes\""
+  ];
+}
+
+// AttributesFilters defines filters used to filter deployments
+message AttributesFilters {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_stringer) = true;
+
+  repeated string validators = 1 [
+    (gogoproto.jsontag) = "validators",
+    (gogoproto.moretags) = "yaml:\"validators\""
+  ];
+
+  repeated string owners = 2 [
+    (gogoproto.jsontag) = "owners",
+    (gogoproto.moretags) = "yaml:\"owners\""
+  ];
+}
+
+message MsgSignProviderAttributes {
+  option (gogoproto.equal) = false;
+
+  string owner = 1 [
+    (gogoproto.jsontag) = "owner",
+    (gogoproto.moretags) = "yaml:\"owner\""
+  ];
+
+  string validator = 2 [
+    (gogoproto.jsontag) = "validator",
+    (gogoproto.moretags) = "yaml:\"auditor\""
+  ];
+
+  repeated akash.base.v1beta1.Attribute attributes = 3 [
+    (gogoproto.castrepeated) = "github.com/ovrclk/akash/x/provider/types.Attributes",
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "attributes",
+    (gogoproto.moretags) = "yaml:\"attributes\""
+  ];
+}
+
+message MsgDeleteProviderAttributes {
+  option (gogoproto.equal) = false;
+
+  string owner = 1 [
+    (gogoproto.jsontag) = "owner",
+    (gogoproto.moretags) = "yaml:\"owner\""
+  ];
+
+  string validator = 2 [
+    (gogoproto.jsontag) = "validator",
+    (gogoproto.moretags) = "yaml:\"auditor\""
+  ];
+
+  repeated akash.base.v1beta1.Attribute attributes = 3 [
+    (gogoproto.castrepeated) = "github.com/ovrclk/akash/x/provider/types.Attributes",
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "attributes",
+    (gogoproto.moretags) = "yaml:\"attributes\""
+  ];
+}

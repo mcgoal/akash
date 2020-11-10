@@ -9,11 +9,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/tendermint/tendermint/libs/log"
+	"google.golang.org/grpc"
+
+	atypes "github.com/ovrclk/akash/x/audit/types"
 	dtypes "github.com/ovrclk/akash/x/deployment/types"
 	mtypes "github.com/ovrclk/akash/x/market/types"
 	ptypes "github.com/ovrclk/akash/x/provider/types"
-	"github.com/tendermint/tendermint/libs/log"
-	grpc "google.golang.org/grpc"
 )
 
 var (
@@ -29,6 +31,7 @@ type QueryClient interface {
 	dtypes.QueryClient
 	mtypes.QueryClient
 	ptypes.QueryClient
+	atypes.QueryClient
 
 	// TODO: implement with search parameters
 	ActiveLeasesForProvider(id sdk.AccAddress) (mtypes.Leases, error)
@@ -119,6 +122,7 @@ type qclient struct {
 	dclient dtypes.QueryClient
 	mclient mtypes.QueryClient
 	pclient ptypes.QueryClient
+	aclient atypes.QueryClient
 }
 
 // NewQueryClient creates new query client instance
@@ -126,11 +130,13 @@ func NewQueryClient(
 	dclient dtypes.QueryClient,
 	mclient mtypes.QueryClient,
 	pclient ptypes.QueryClient,
+	aclient atypes.QueryClient,
 ) QueryClient {
 	return &qclient{
 		dclient: dclient,
 		mclient: mclient,
 		pclient: pclient,
+		aclient: aclient,
 	}
 }
 
@@ -209,4 +215,11 @@ func (c *qclient) Provider(ctx context.Context, in *ptypes.QueryProviderRequest,
 		return &ptypes.QueryProviderResponse{}, ErrClientNotFound
 	}
 	return c.pclient.Provider(ctx, in, opts...)
+}
+
+func (c *qclient) Auditors(ctx context.Context, in *atypes.QueryAuditorsRequest, opts ...grpc.CallOption) (*atypes.QueryAuditorsResponse, error) {
+	if c.pclient == nil {
+		return &atypes.QueryAuditorsResponse{}, ErrClientNotFound
+	}
+	return c.aclient.Auditors(ctx, in, opts...)
 }
